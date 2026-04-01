@@ -27,5 +27,15 @@
     "id": "906a8b1c-33b3-4782-84af-a430ee3d62d4",
     "createdAt": "2026-04-01T13:33:12.861Z",
     "updatedAt": "2026-04-01T13:33:12.861Z"
+  },
+  {
+    "name": "meals",
+    "description": "presupuesto",
+    "subdomain": "meals",
+    "repoUrl": "daniwally/meals",
+    "status": "active",
+    "id": "abe29201-2b82-4df2-b77a-52f4872646cd",
+    "createdAt": "2026-04-01T13:33:17.178Z",
+    "updatedAt": "2026-04-01T13:33:17.178Z"
   }
 ]
