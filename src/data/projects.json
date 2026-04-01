@@ -18,15 +18,5 @@
     "id": "daae5f4a-fdcd-4677-baec-d2ceac1bbe70",
     "createdAt": "2026-04-01T14:09:04.875Z",
     "updatedAt": "2026-04-01T18:28:06.159Z"
-  },
-  {
-    "name": "lost",
-    "description": "",
-    "subdomain": "lostw",
-    "repoUrl": "daniwally/lost",
-    "status": "active",
-    "id": "4993184e-3cd4-478a-beb7-9a89353a758e",
-    "createdAt": "2026-04-01T14:38:55.453Z",
-    "updatedAt": "2026-04-01T14:39:51.154Z"
   }
 ]
