@@ -189,7 +189,7 @@ export default function ProjectCard({ project, onUpdate }: ProjectCardProps) {
         {!editing && (
           <button
             onClick={() => setEditing(true)}
-            className="px-2 py-1 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors"
+            className="px-2 py-1 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors cursor-pointer"
           >
             Editar
           </button>
@@ -198,28 +198,28 @@ export default function ProjectCard({ project, onUpdate }: ProjectCardProps) {
           href={projectUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-2 py-1 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors"
+          className="px-2 py-1 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors cursor-pointer"
         >
           Ver
         </a>
         <button
           onClick={handleToggleStatus}
           disabled={loading}
-          className="px-2 py-1 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors"
+          className="px-2 py-1 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors cursor-pointer"
         >
           {project.status === "active" ? "Desactivar" : "Activar"}
         </button>
         <button
           onClick={handleReimport}
           disabled={loading}
-          className="px-2 py-1 border border-accent/50 rounded-lg text-accent hover:bg-accent/10 transition-colors"
+          className="px-2 py-1 border border-accent/50 rounded-lg text-accent hover:bg-accent/10 transition-colors cursor-pointer"
         >
           Actualizar
         </button>
         <button
           onClick={handleDelete}
           disabled={loading}
-          className="px-2 py-1 bg-danger text-white rounded-lg hover:bg-danger/80 transition-colors"
+          className="px-2 py-1 bg-danger text-white rounded-lg hover:bg-danger/80 transition-colors cursor-pointer"
         >
           Eliminar
         </button>
