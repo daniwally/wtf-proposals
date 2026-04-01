@@ -1,8 +1,9 @@
 export async function POST(request: Request) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = (process.env.ANTHROPIC_API_KEY || "").trim();
   if (!apiKey) {
     return Response.json({ error: "ANTHROPIC_API_KEY not configured" }, { status: 500 });
   }
+  console.log("API Key starts with:", apiKey.substring(0, 10), "length:", apiKey.length);
 
   const body = await request.json();
   const { prompt, agency, client, currency, lang } = body;
