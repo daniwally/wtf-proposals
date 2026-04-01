@@ -4,10 +4,12 @@ import { useState, useEffect, useCallback } from "react";
 import type { Project } from "@/types/project";
 import ProjectCard from "./ProjectCard";
 import ImportModal from "./ImportModal";
+import Generator from "./Generator";
 
 export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [showImport, setShowImport] = useState(false);
+  const [showGenerator, setShowGenerator] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const loadProjects = useCallback(async () => {
@@ -39,14 +41,12 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <a
-              href="/generator/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-2.5 border border-accent text-accent hover:bg-accent hover:text-white rounded-lg font-medium transition-colors"
+            <button
+              onClick={() => setShowGenerator(true)}
+              className="px-5 py-2.5 border border-accent text-accent hover:bg-accent hover:text-white rounded-lg font-medium transition-colors cursor-pointer"
             >
               Budget Generator
-            </a>
+            </button>
             <button
               onClick={() => setShowImport(true)}
               className="px-5 py-2.5 bg-accent hover:bg-accent-hover text-white rounded-lg font-medium transition-colors"
@@ -59,7 +59,9 @@ export default function Dashboard() {
 
       {/* Content */}
       <main className="max-w-6xl mx-auto px-6 py-8">
-        {loading ? (
+        {showGenerator ? (
+          <Generator onBack={() => setShowGenerator(false)} />
+        ) : loading ? (
           <div className="text-center py-20 text-white/60">Cargando...</div>
         ) : projects.length === 0 ? (
           <div className="text-center py-20">
