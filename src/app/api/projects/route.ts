@@ -16,6 +16,14 @@ export async function POST(request: Request) {
     );
   }
 
+  const existing = await getProjects();
+  if (existing.find((p) => p.subdomain === subdomain.toLowerCase().replace(/[^a-z0-9-]/g, ""))) {
+    return Response.json(
+      { error: "Ese subdominio ya está en uso" },
+      { status: 409 }
+    );
+  }
+
   const project = await addProject({
     name,
     description: description || "",
