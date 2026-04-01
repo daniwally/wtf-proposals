@@ -8,5 +8,15 @@
     "id": "f53a8caf-f8b0-4659-a8f6-5cb3adb55357",
     "createdAt": "2026-04-01T12:53:09.173Z",
     "updatedAt": "2026-04-01T13:21:05.439Z"
+  },
+  {
+    "name": "meals",
+    "description": "",
+    "subdomain": "meals3",
+    "repoUrl": "daniwally/meals",
+    "status": "active",
+    "id": "1ca9da88-6cc3-44e4-8791-64c0c16f0b7e",
+    "createdAt": "2026-04-01T13:51:44.268Z",
+    "updatedAt": "2026-04-01T13:51:44.268Z"
   }
 ]
