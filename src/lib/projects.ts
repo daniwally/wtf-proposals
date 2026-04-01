@@ -1,22 +1,69 @@
-import { promises as fs } from "fs";
-import path from "path";
 import type { Project } from "@/types/project";
 
-const DATA_PATH = path.join(process.cwd(), "src/data/projects.json");
+const REPO = "daniwally/wtf-proposals";
+const FILE_PATH = "src/data/projects.json";
 
-export async function getProjects(): Promise<Project[]> {
-  const data = await fs.readFile(DATA_PATH, "utf-8");
-  return JSON.parse(data);
+function getToken() {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) throw new Error("GITHUB_TOKEN not configured");
+  return token;
 }
 
-export async function saveProjects(projects: Project[]): Promise<void> {
-  await fs.writeFile(DATA_PATH, JSON.stringify(projects, null, 2));
+async function getFileFromGitHub(): Promise<{ content: Project[]; sha: string }> {
+  const res = await fetch(
+    `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`,
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+      cache: "no-store",
+    }
+  );
+
+  if (!res.ok) {
+    if (res.status === 404) return { content: [], sha: "" };
+    throw new Error(`GitHub API error: ${res.status}`);
+  }
+
+  const data = await res.json();
+  const decoded = Buffer.from(data.content, "base64").toString("utf-8");
+  return { content: JSON.parse(decoded), sha: data.sha };
+}
+
+async function saveFileToGitHub(projects: Project[], sha: string, message: string) {
+  const encoded = Buffer.from(JSON.stringify(projects, null, 2)).toString("base64");
+  const res = await fetch(
+    `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+      body: JSON.stringify({
+        message,
+        content: encoded,
+        sha,
+      }),
+    }
+  );
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(`Failed to save: ${error}`);
+  }
+}
+
+export async function getProjects(): Promise<Project[]> {
+  const { content } = await getFileFromGitHub();
+  return content;
 }
 
 export async function addProject(
   project: Omit<Project, "id" | "createdAt" | "updatedAt">
 ): Promise<Project> {
-  const projects = await getProjects();
+  const { content: projects, sha } = await getFileFromGitHub();
   const newProject: Project = {
     ...project,
     id: crypto.randomUUID(),
@@ -24,7 +71,7 @@ export async function addProject(
     updatedAt: new Date().toISOString(),
   };
   projects.push(newProject);
-  await saveProjects(projects);
+  await saveFileToGitHub(projects, sha, `Add project: ${newProject.name}`);
   return newProject;
 }
 
@@ -32,7 +79,7 @@ export async function updateProject(
   id: string,
   updates: Partial<Pick<Project, "name" | "subdomain" | "status">>
 ): Promise<Project | null> {
-  const projects = await getProjects();
+  const { content: projects, sha } = await getFileFromGitHub();
   const index = projects.findIndex((p) => p.id === id);
   if (index === -1) return null;
   projects[index] = {
@@ -40,14 +87,15 @@ export async function updateProject(
     ...updates,
     updatedAt: new Date().toISOString(),
   };
-  await saveProjects(projects);
+  await saveFileToGitHub(projects, sha, `Update project: ${projects[index].name}`);
   return projects[index];
 }
 
 export async function deleteProject(id: string): Promise<boolean> {
-  const projects = await getProjects();
+  const { content: projects, sha } = await getFileFromGitHub();
+  const project = projects.find((p) => p.id === id);
+  if (!project) return false;
   const filtered = projects.filter((p) => p.id !== id);
-  if (filtered.length === projects.length) return false;
-  await saveProjects(filtered);
+  await saveFileToGitHub(filtered, sha, `Delete project: ${project.name}`);
   return true;
 }
