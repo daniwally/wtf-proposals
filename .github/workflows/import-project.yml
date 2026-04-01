@@ -48,9 +48,11 @@ jobs:
             yarn build
           else
             npm install --legacy-peer-deps
-            # Fix all nested ajv-keywords conflicts
-            find node_modules -path "*/node_modules/ajv-keywords" -type d -not -path "node_modules/ajv-keywords" -exec rm -rf {} + 2>/dev/null || true
-            find node_modules -path "*/node_modules/schema-utils/node_modules" -type d -exec rm -rf {} + 2>/dev/null || true
+            # Fix ajv-keywords/schema-utils conflicts
+            # Remove fork-ts-checker's nested schema-utils so it uses root
+            rm -rf node_modules/fork-ts-checker-webpack-plugin/node_modules 2>/dev/null || true
+            # Install compatible ajv stack at root
+            npm install ajv@8 ajv-keywords@5 ajv-formats@2 --legacy-peer-deps 2>/dev/null || true
             npm run build
           fi
 
