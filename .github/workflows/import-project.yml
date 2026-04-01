@@ -47,13 +47,7 @@ jobs:
             yarn install
             yarn build
           else
-            npm install --legacy-peer-deps
-            # Install compatible ajv stack
-            npm install ajv@8 ajv-keywords@5 ajv-formats@2 schema-utils@4 --legacy-peer-deps 2>/dev/null || true
-            # Nuke ALL nested node_modules that contain schema-utils
-            for dir in $(find node_modules -mindepth 2 -maxdepth 3 -name schema-utils -type d 2>/dev/null); do
-              rm -rf "$dir"
-            done
+            npm install --force
             npm run build
           fi
 
