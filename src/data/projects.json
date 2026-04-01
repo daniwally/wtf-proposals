@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "name": "Telit-test",
+    "subdomain": "testtelit",
+    "repoUrl": "daniwally/telit",
+    "status": "active",
+    "id": "e4230ad2-e28a-40f0-9fdb-8a34791c0eff",
+    "createdAt": "2026-04-01T11:56:40.717Z",
+    "updatedAt": "2026-04-01T11:56:40.717Z"
+  }
+]
