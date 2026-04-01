@@ -70,7 +70,7 @@ export default function ProjectCard({ project, onUpdate }: ProjectCardProps) {
   const projectUrl = `https://${project.subdomain}.wtf-agency.works`;
 
   return (
-    <div className="w-1/2 bg-black/70 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:border-white/20 transition-colors">
+    <div className="w-[30%] bg-black/70 backdrop-blur-md border border-white/10 rounded-xl p-5 hover:border-white/20 transition-colors">
       <div className="flex items-start justify-between mb-3">
         <div>
           <h3 className="text-lg font-semibold text-white">{project.name}</h3>
