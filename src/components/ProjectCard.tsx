@@ -53,11 +53,11 @@ export default function ProjectCard({ project, onUpdate }: ProjectCardProps) {
   const projectUrl = `https://${project.subdomain}.wtf-agency.works`;
 
   return (
-    <div className="bg-surface border border-border rounded-xl p-6 hover:border-border/80 transition-colors">
+    <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:border-white/20 transition-colors">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold">{project.name}</h3>
-          <p className="text-sm text-muted font-mono mt-1">{project.repoUrl}</p>
+          <h3 className="text-lg font-semibold text-white">{project.name}</h3>
+          <p className="text-sm text-white/50 font-mono mt-1">{project.repoUrl}</p>
         </div>
         <span
           className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${

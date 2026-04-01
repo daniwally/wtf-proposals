@@ -27,13 +27,13 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background bg-cover bg-center bg-fixed bg-no-repeat" style={{ backgroundImage: "url('/assets/bg_1.png')" }}>
       {/* Header */}
-      <header className="border-b border-border">
+      <header className="border-b border-white/10">
         <div className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <img src="/assets/logo-wtf.png" alt="WTF Agency" className="h-10" />
+            <img src="/assets/logo-wtf.png" alt="WTF Agency" className="h-12" />
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">Proposals</h1>
-              <p className="text-muted text-sm mt-1">
+              <h1 className="text-2xl font-bold tracking-tight text-white">Proposals</h1>
+              <p className="text-white/60 text-sm mt-1">
                 {projects.length} proyectos &middot; {activeCount} activos
               </p>
             </div>
@@ -50,10 +50,10 @@ export default function Dashboard() {
       {/* Content */}
       <main className="max-w-6xl mx-auto px-6 py-8">
         {loading ? (
-          <div className="text-center py-20 text-muted">Cargando...</div>
+          <div className="text-center py-20 text-white/60">Cargando...</div>
         ) : projects.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-muted text-lg mb-4">
+            <p className="text-white/60 text-lg mb-4">
               No hay proyectos todavía
             </p>
             <button
