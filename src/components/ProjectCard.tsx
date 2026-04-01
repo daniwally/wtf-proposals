@@ -1,0 +1,153 @@
+"use client";
+
+import { useState } from "react";
+import type { Project } from "@/types/project";
+
+interface ProjectCardProps {
+  project: Project;
+  onUpdate: () => void;
+}
+
+export default function ProjectCard({ project, onUpdate }: ProjectCardProps) {
+  const [editing, setEditing] = useState(false);
+  const [subdomain, setSubdomain] = useState(project.subdomain);
+  const [loading, setLoading] = useState(false);
+
+  const handleToggleStatus = async () => {
+    setLoading(true);
+    await fetch("/api/projects", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: project.id,
+        status: project.status === "active" ? "inactive" : "active",
+      }),
+    });
+    setLoading(false);
+    onUpdate();
+  };
+
+  const handleUpdateSubdomain = async () => {
+    setLoading(true);
+    await fetch("/api/projects", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: project.id,
+        subdomain: subdomain.toLowerCase().replace(/[^a-z0-9-]/g, ""),
+      }),
+    });
+    setLoading(false);
+    setEditing(false);
+    onUpdate();
+  };
+
+  const handleDelete = async () => {
+    if (!confirm(`Eliminar "${project.name}"?`)) return;
+    setLoading(true);
+    await fetch(`/api/projects?id=${project.id}`, { method: "DELETE" });
+    setLoading(false);
+    onUpdate();
+  };
+
+  const projectUrl = `https://${project.subdomain}.wtf-agency.works`;
+
+  return (
+    <div className="bg-surface border border-border rounded-xl p-6 hover:border-border/80 transition-colors">
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <h3 className="text-lg font-semibold">{project.name}</h3>
+          <p className="text-sm text-muted font-mono mt-1">{project.repoUrl}</p>
+        </div>
+        <span
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${
+            project.status === "active"
+              ? "bg-success/10 text-success"
+              : "bg-muted/10 text-muted"
+          }`}
+        >
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${
+              project.status === "active" ? "bg-success" : "bg-muted"
+            }`}
+          />
+          {project.status === "active" ? "Activo" : "Inactivo"}
+        </span>
+      </div>
+
+      <div className="mb-4">
+        {editing ? (
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={subdomain}
+              onChange={(e) =>
+                setSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))
+              }
+              className="flex-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-accent"
+            />
+            <span className="text-muted text-sm">.wtf-agency.works</span>
+            <button
+              onClick={handleUpdateSubdomain}
+              disabled={loading}
+              className="px-3 py-2 bg-accent text-white rounded-lg text-sm hover:bg-accent-hover transition-colors"
+            >
+              OK
+            </button>
+            <button
+              onClick={() => {
+                setEditing(false);
+                setSubdomain(project.subdomain);
+              }}
+              className="px-3 py-2 text-muted hover:text-foreground text-sm"
+            >
+              X
+            </button>
+          </div>
+        ) : (
+          <a
+            href={projectUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent hover:underline text-sm font-mono"
+          >
+            {projectUrl}
+          </a>
+        )}
+      </div>
+
+      <div className="flex items-center gap-2 text-sm">
+        {!editing && (
+          <button
+            onClick={() => setEditing(true)}
+            className="px-3 py-1.5 border border-border rounded-lg text-muted hover:text-foreground transition-colors"
+          >
+            Editar subdominio
+          </button>
+        )}
+        <a
+          href={projectUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-3 py-1.5 border border-border rounded-lg text-muted hover:text-foreground transition-colors"
+        >
+          Ver
+        </a>
+        <button
+          onClick={handleToggleStatus}
+          disabled={loading}
+          className="px-3 py-1.5 border border-border rounded-lg text-muted hover:text-foreground transition-colors"
+        >
+          {project.status === "active" ? "Desactivar" : "Activar"}
+        </button>
+        <button
+          onClick={handleDelete}
+          disabled={loading}
+          className="px-3 py-1.5 border border-border rounded-lg text-danger hover:bg-danger/10 transition-colors ml-auto"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  );
+}
