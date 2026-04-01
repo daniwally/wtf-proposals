@@ -1,5 +1,3 @@
-import { getProjects } from "@/lib/projects";
-
 export async function POST(request: Request) {
   const body = await request.json();
   const { repoFullName, subdomain } = body;
@@ -19,18 +17,8 @@ export async function POST(request: Request) {
     );
   }
 
-  // Check subdomain not already taken
-  const projects = await getProjects();
-  const existing = projects.find((p) => p.subdomain === subdomain);
-  if (existing) {
-    return Response.json(
-      { error: `Subdomain "${subdomain}" is already in use` },
-      { status: 409 }
-    );
-  }
-
   // Trigger GitHub Actions workflow
-  const [owner, repo] = repoFullName.split("/");
+  const [owner] = repoFullName.split("/");
   const response = await fetch(
     `https://api.github.com/repos/${owner}/wtf-proposals/actions/workflows/import-project.yml/dispatches`,
     {
@@ -44,7 +32,7 @@ export async function POST(request: Request) {
         inputs: {
           source_repo: repoFullName,
           subdomain: subdomain,
-          project_name: repo,
+          project_name: subdomain,
         },
       }),
     }
