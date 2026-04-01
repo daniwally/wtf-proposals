@@ -194,15 +194,7 @@ export default function ProjectCard({ project, onUpdate }: ProjectCardProps) {
             Editar
           </button>
         )}
-        <a
-          href={projectUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-2 py-1 bg-white/80 text-black rounded-lg hover:bg-transparent hover:text-white hover:border hover:border-white/20 border border-transparent transition-colors cursor-pointer"
-        >
-          Ver
-        </a>
-        <button
+<button
           onClick={handleToggleStatus}
           disabled={loading}
           className="px-2 py-1 bg-white/80 text-black rounded-lg hover:bg-transparent hover:text-white hover:border hover:border-white/20 border border-transparent transition-colors cursor-pointer"
