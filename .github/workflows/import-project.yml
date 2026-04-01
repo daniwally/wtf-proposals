@@ -27,13 +27,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "16"
 
       - name: Detect and build source project
         env:
           DISABLE_ESLINT_PLUGIN: "true"
           CI: "false"
           GENERATE_SOURCEMAP: "false"
+          SKIP_PREFLIGHT_CHECK: "true"
         run: |
           cd /tmp/source-repo
           # Check if frontend directory exists (Emergent structure)
@@ -47,8 +48,8 @@ jobs:
             yarn build
           else
             npm install --legacy-peer-deps
-            # Fix ajv/schema-utils compatibility
-            npm install ajv@8 ajv-keywords@5 --legacy-peer-deps 2>/dev/null || true
+            # Deduplicate ajv to fix schema-utils conflicts
+            npx npm-dedupe 2>/dev/null || true
             npm run build
           fi
 
