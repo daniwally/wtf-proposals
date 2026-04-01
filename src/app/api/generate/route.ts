@@ -92,9 +92,15 @@ Importante: los montos deben ser numeros realistas para la moneda ${curr}. Inclu
     });
 
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
+      const errText = await res.text();
+      console.log("Anthropic error response:", res.status, errText);
+      let errMsg = `API error: ${res.status}`;
+      try {
+        const errJson = JSON.parse(errText);
+        errMsg = errJson.error?.message || errMsg;
+      } catch { /* ignore */ }
       return Response.json(
-        { error: err.error?.message || `API error: ${res.status}` },
+        { error: `${errMsg} (status: ${res.status}, key prefix: ${apiKey.substring(0, 8)}...)` },
         { status: res.status }
       );
     }
