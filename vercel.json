@@ -5,7 +5,7 @@
       "has": [
         {
           "type": "host",
-          "value": "(?<subdomain>[^.]+)\\.wtf-agency\\.works"
+          "value": "(?<subdomain>(?!admin)[^.]+)\\.wtf-agency\\.works"
         }
       ],
       "destination": "/projects/:subdomain/:path*"
