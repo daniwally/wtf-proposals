@@ -60,6 +60,42 @@ export async function getProjects(): Promise<Project[]> {
   return content;
 }
 
+async function createPlaceholderPage(subdomain: string) {
+  const placeholderPath = `public/projects/${subdomain}/index.html`;
+  // Read the 404.html template
+  const templateRes = await fetch(
+    `https://api.github.com/repos/${REPO}/contents/public/projects/404.html`,
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+    }
+  );
+  let content: string;
+  if (templateRes.ok) {
+    const data = await templateRes.json();
+    content = data.content; // already base64
+  } else {
+    content = Buffer.from("<html><body>Preparando proyecto...</body></html>").toString("base64");
+  }
+
+  await fetch(
+    `https://api.github.com/repos/${REPO}/contents/${placeholderPath}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+      body: JSON.stringify({
+        message: `Placeholder for ${subdomain}`,
+        content,
+      }),
+    }
+  );
+}
+
 export async function addProject(
   project: Omit<Project, "id" | "createdAt" | "updatedAt">
 ): Promise<Project> {
@@ -72,6 +108,7 @@ export async function addProject(
   };
   projects.push(newProject);
   await saveFileToGitHub(projects, sha, `Add project: ${newProject.name}`);
+  await createPlaceholderPage(newProject.subdomain);
   return newProject;
 }
 
