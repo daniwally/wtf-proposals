@@ -41,12 +41,12 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button
+            {/* <button
               onClick={() => setShowGenerator(true)}
               className="px-5 py-2.5 border border-accent text-accent hover:bg-accent hover:text-white rounded-lg font-medium transition-colors cursor-pointer"
             >
               Budget Generator
-            </button>
+            </button> */}
             <button
               onClick={() => setShowImport(true)}
               className="px-5 py-2.5 bg-accent hover:bg-accent-hover text-white rounded-lg font-medium transition-colors"
