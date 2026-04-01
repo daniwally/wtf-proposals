@@ -77,7 +77,7 @@ export async function addProject(
 
 export async function updateProject(
   id: string,
-  updates: Partial<Pick<Project, "name" | "subdomain" | "status">>
+  updates: Partial<Pick<Project, "name" | "subdomain" | "status" | "description">>
 ): Promise<Project | null> {
   const { content: projects, sha } = await getFileFromGitHub();
   const index = projects.findIndex((p) => p.id === id);

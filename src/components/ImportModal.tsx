@@ -20,6 +20,7 @@ export default function ImportModal({ open, onClose, onImported }: ImportModalPr
   const [selectedRepo, setSelectedRepo] = useState("");
   const [subdomain, setSubdomain] = useState("");
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -61,6 +62,7 @@ export default function ImportModal({ open, onClose, onImported }: ImportModalPr
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name,
+        description,
         subdomain: subdomain.toLowerCase(),
         repoUrl: repoFullName,
       }),
@@ -97,6 +99,7 @@ export default function ImportModal({ open, onClose, onImported }: ImportModalPr
       setSelectedRepo("");
       setSubdomain("");
       setName("");
+      setDescription("");
       setSuccess("");
     }, 2000);
   };
@@ -116,6 +119,17 @@ export default function ImportModal({ open, onClose, onImported }: ImportModalPr
               placeholder="Ej: Telit Pitch Deck"
               className="w-full bg-background border border-border rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-accent"
               required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-white/60 mb-2">Descripción</label>
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Breve descripción del proyecto..."
+              className="w-full bg-background border border-border rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-accent"
             />
           </div>
 
