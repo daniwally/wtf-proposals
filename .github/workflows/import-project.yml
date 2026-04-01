@@ -41,15 +41,10 @@ jobs:
           if [ -d "frontend" ]; then
             cd frontend
           fi
-          # Use yarn if yarn.lock exists, otherwise npm
-          if [ -f "yarn.lock" ]; then
-            npm install -g yarn
-            yarn install
-            yarn build
-          else
-            npm install --force
-            npm run build
-          fi
+          # Always use yarn for better dependency hoisting
+          npm install -g yarn
+          yarn install --ignore-engines 2>/dev/null || yarn install
+          yarn build
 
       - name: Copy build output
         run: |
