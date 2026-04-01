@@ -28,5 +28,15 @@
     "id": "74d72205-00a0-48e1-9890-c7038f5f7e3a",
     "createdAt": "2026-04-01T20:58:41.466Z",
     "updatedAt": "2026-04-01T20:59:55.919Z"
+  },
+  {
+    "name": "Barugel",
+    "description": "presupuesto",
+    "subdomain": "barugel",
+    "repoUrl": "daniwally/Budget_Barugel",
+    "status": "active",
+    "id": "ad03f30a-cb9d-4628-ae5b-c6b7b06dda70",
+    "createdAt": "2026-04-01T21:09:20.588Z",
+    "updatedAt": "2026-04-01T21:09:20.588Z"
   }
 ]
