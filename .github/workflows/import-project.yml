@@ -47,8 +47,9 @@ jobs:
             yarn build
           else
             npm install --legacy-peer-deps
-            # Try build first, if it fails try with ajv fix
-            npm run build || (npm install ajv@8 --legacy-peer-deps 2>/dev/null && npm run build)
+            # Fix ajv/schema-utils compatibility
+            npm install ajv@8 ajv-keywords@5 --legacy-peer-deps 2>/dev/null || true
+            npm run build
           fi
 
       - name: Copy build output
