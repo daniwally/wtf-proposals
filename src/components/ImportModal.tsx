@@ -24,6 +24,8 @@ export default function ImportModal({ open, onClose, onImported }: ImportModalPr
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [repoListOpen, setRepoListOpen] = useState(true);
+  const [repoFilter, setRepoFilter] = useState("");
 
   useEffect(() => {
     if (open && repos.length === 0) {
@@ -101,6 +103,8 @@ export default function ImportModal({ open, onClose, onImported }: ImportModalPr
       setName("");
       setDescription("");
       setSuccess("");
+      setRepoListOpen(true);
+      setRepoFilter("");
     }, 2000);
   };
 
@@ -139,22 +143,48 @@ export default function ImportModal({ open, onClose, onImported }: ImportModalPr
               <div className="w-full bg-background border border-border rounded-lg px-4 py-3 text-white/30">
                 Cargando repositorios...
               </div>
-            ) : (
-              <select
-                value={selectedRepo}
-                onChange={(e) => handleRepoChange(e.target.value)}
-                className="w-full bg-background border border-border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent appearance-none cursor-pointer"
-                required
+            ) : !repoListOpen && selectedRepo ? (
+              <div
+                onClick={() => setRepoListOpen(true)}
+                className="w-full bg-background border border-border rounded-lg px-4 py-3 text-white cursor-pointer hover:border-accent transition-colors flex items-center justify-between"
               >
-                <option value="" className="bg-background text-white/30">
-                  Seleccionar repositorio...
-                </option>
-                {repos.map((repo) => (
-                  <option key={repo.fullName} value={repo.fullName} className="bg-background text-white">
-                    {repo.fullName}
-                  </option>
-                ))}
-              </select>
+                <span>{repos.find((r) => r.fullName === selectedRepo)?.name || selectedRepo}</span>
+                <span className="text-white/30 text-xs">Cambiar</span>
+              </div>
+            ) : (
+              <div className="w-full bg-background border border-border rounded-lg overflow-hidden">
+                <div className="px-4 py-2 border-b border-border flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={repoFilter}
+                    onChange={(e) => setRepoFilter(e.target.value)}
+                    placeholder="Buscar repo..."
+                    className="flex-1 bg-transparent text-white text-sm placeholder:text-white/30 focus:outline-none"
+                    autoFocus
+                  />
+                </div>
+                <div className="max-h-48 overflow-y-auto">
+                  {repos
+                    .filter((r) => r.name.toLowerCase().includes(repoFilter.toLowerCase()))
+                    .map((repo) => (
+                      <div
+                        key={repo.fullName}
+                        onClick={() => {
+                          handleRepoChange(repo.fullName);
+                          setRepoListOpen(false);
+                          setRepoFilter("");
+                        }}
+                        className={`px-4 py-3 cursor-pointer transition-colors text-sm ${
+                          selectedRepo === repo.fullName
+                            ? "bg-accent/20 text-white"
+                            : "text-white/80 hover:bg-white/5"
+                        }`}
+                      >
+                        {repo.name}
+                      </div>
+                    ))}
+                </div>
+              </div>
             )}
           </div>
 
