@@ -21,8 +21,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Clone source repo
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git clone https://github.com/${{ github.event.inputs.source_repo }}.git /tmp/source-repo
+          git clone https://x-access-token:${GH_TOKEN}@github.com/${{ github.event.inputs.source_repo }}.git /tmp/source-repo
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
