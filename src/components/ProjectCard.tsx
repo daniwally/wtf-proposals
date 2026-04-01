@@ -189,7 +189,7 @@ export default function ProjectCard({ project, onUpdate }: ProjectCardProps) {
         {!editing && (
           <button
             onClick={() => setEditing(true)}
-            className="px-2 py-1 border border-white/20 rounded-lg text-white/60 hover:bg-white hover:text-black transition-colors cursor-pointer"
+            className="px-2 py-1 bg-white/80 text-black rounded-lg hover:bg-transparent hover:text-white hover:border hover:border-white/20 border border-transparent transition-colors cursor-pointer"
           >
             Editar
           </button>
@@ -198,28 +198,28 @@ export default function ProjectCard({ project, onUpdate }: ProjectCardProps) {
           href={projectUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-2 py-1 border border-white/20 rounded-lg text-white/60 hover:bg-white hover:text-black transition-colors cursor-pointer"
+          className="px-2 py-1 bg-white/80 text-black rounded-lg hover:bg-transparent hover:text-white hover:border hover:border-white/20 border border-transparent transition-colors cursor-pointer"
         >
           Ver
         </a>
         <button
           onClick={handleToggleStatus}
           disabled={loading}
-          className="px-2 py-1 border border-white/20 rounded-lg text-white/60 hover:bg-white hover:text-black transition-colors cursor-pointer"
+          className="px-2 py-1 bg-white/80 text-black rounded-lg hover:bg-transparent hover:text-white hover:border hover:border-white/20 border border-transparent transition-colors cursor-pointer"
         >
           {project.status === "active" ? "Desactivar" : "Activar"}
         </button>
         <button
           onClick={handleReimport}
           disabled={loading}
-          className="px-2 py-1 border border-accent/50 rounded-lg text-accent hover:bg-accent hover:text-white transition-colors cursor-pointer"
+          className="px-2 py-1 bg-accent text-white rounded-lg hover:bg-transparent hover:text-accent hover:border-accent/50 border border-transparent transition-colors cursor-pointer"
         >
           Actualizar
         </button>
         <button
           onClick={handleDelete}
           disabled={loading}
-          className="px-2 py-1 border border-danger rounded-lg text-danger hover:bg-danger hover:text-white transition-colors cursor-pointer"
+          className="px-2 py-1 bg-danger text-white rounded-lg hover:bg-transparent hover:text-danger hover:border-danger border border-transparent transition-colors cursor-pointer"
         >
           Eliminar
         </button>
