@@ -17,15 +17,5 @@
     "id": "f53a8caf-f8b0-4659-a8f6-5cb3adb55357",
     "createdAt": "2026-04-01T12:53:09.173Z",
     "updatedAt": "2026-04-01T13:21:05.439Z"
-  },
-  {
-    "name": "cafayate-proyect",
-    "description": "test 2",
-    "subdomain": "cafayate33",
-    "repoUrl": "daniwally/cafayate-proyect",
-    "status": "active",
-    "id": "214acac6-e521-476e-8646-1881d325f506",
-    "createdAt": "2026-04-01T13:21:15.128Z",
-    "updatedAt": "2026-04-01T13:21:15.128Z"
   }
 ]
