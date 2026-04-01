@@ -33,6 +33,7 @@ jobs:
         env:
           DISABLE_ESLINT_PLUGIN: "true"
           CI: "false"
+          GENERATE_SOURCEMAP: "false"
         run: |
           cd /tmp/source-repo
           # Check if frontend directory exists (Emergent structure)
@@ -46,9 +47,8 @@ jobs:
             yarn build
           else
             npm install --legacy-peer-deps
-            # Fix common CRA dependency issues
-            npm install ajv@8 --legacy-peer-deps 2>/dev/null || true
-            npm run build
+            # Try build first, if it fails try with ajv fix
+            npm run build || (npm install ajv@8 --legacy-peer-deps 2>/dev/null && npm run build)
           fi
 
       - name: Copy build output
