@@ -185,41 +185,41 @@ export default function ProjectCard({ project, onUpdate }: ProjectCardProps) {
         )}
       </div>
 
-      <div className="flex items-center gap-2 text-sm">
+      <div className="flex flex-wrap items-center gap-1.5 text-xs">
         {!editing && (
           <button
             onClick={() => setEditing(true)}
-            className="px-3 py-1.5 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors"
+            className="px-2 py-1 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors"
           >
-            Editar subdominio
+            Editar
           </button>
         )}
         <a
           href={projectUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-3 py-1.5 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors"
+          className="px-2 py-1 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors"
         >
           Ver
         </a>
         <button
           onClick={handleToggleStatus}
           disabled={loading}
-          className="px-3 py-1.5 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors"
+          className="px-2 py-1 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors"
         >
           {project.status === "active" ? "Desactivar" : "Activar"}
         </button>
         <button
           onClick={handleReimport}
           disabled={loading}
-          className="px-3 py-1.5 border border-accent/50 rounded-lg text-accent hover:bg-accent/10 transition-colors"
+          className="px-2 py-1 border border-accent/50 rounded-lg text-accent hover:bg-accent/10 transition-colors"
         >
           Actualizar
         </button>
         <button
           onClick={handleDelete}
           disabled={loading}
-          className="px-3 py-1.5 bg-danger text-white rounded-lg hover:bg-danger/80 transition-colors ml-auto"
+          className="px-2 py-1 bg-danger text-white rounded-lg hover:bg-danger/80 transition-colors"
         >
           Eliminar
         </button>
