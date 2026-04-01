@@ -48,8 +48,9 @@ jobs:
             yarn build
           else
             npm install --legacy-peer-deps
-            # Deduplicate ajv to fix schema-utils conflicts
-            npx npm-dedupe 2>/dev/null || true
+            # Fix nested ajv-keywords conflicts in fork-ts-checker-webpack-plugin
+            rm -rf node_modules/fork-ts-checker-webpack-plugin/node_modules/schema-utils 2>/dev/null || true
+            rm -rf node_modules/fork-ts-checker-webpack-plugin/node_modules/ajv-keywords 2>/dev/null || true
             npm run build
           fi
 
