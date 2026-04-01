@@ -27,18 +27,41 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "18"
 
-      - name: Install and build source project
+      - name: Detect and build source project
         run: |
-          cd /tmp/source-repo/frontend
-          npm install
-          npm run build
+          cd /tmp/source-repo
+          # Check if frontend directory exists (Emergent structure)
+          if [ -d "frontend" ]; then
+            cd frontend
+          fi
+          # Use yarn if yarn.lock exists, otherwise npm
+          if [ -f "yarn.lock" ]; then
+            npm install -g yarn
+            yarn install
+            yarn build
+          else
+            npm install --legacy-peer-deps
+            npm run build
+          fi
 
       - name: Copy build output
         run: |
           mkdir -p public/projects/${{ github.event.inputs.subdomain }}
-          cp -r /tmp/source-repo/frontend/build/* public/projects/${{ github.event.inputs.subdomain }}/
+          # Find the build output directory
+          if [ -d "/tmp/source-repo/frontend/build" ]; then
+            cp -r /tmp/source-repo/frontend/build/* public/projects/${{ github.event.inputs.subdomain }}/
+          elif [ -d "/tmp/source-repo/build" ]; then
+            cp -r /tmp/source-repo/build/* public/projects/${{ github.event.inputs.subdomain }}/
+          elif [ -d "/tmp/source-repo/frontend/dist" ]; then
+            cp -r /tmp/source-repo/frontend/dist/* public/projects/${{ github.event.inputs.subdomain }}/
+          elif [ -d "/tmp/source-repo/dist" ]; then
+            cp -r /tmp/source-repo/dist/* public/projects/${{ github.event.inputs.subdomain }}/
+          else
+            echo "No build output found!"
+            exit 1
+          fi
 
       - name: Update projects.json
         run: |
