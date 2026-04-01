@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WTF Proposal Generator</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#030508;--surface:#0b111a;--primary:#0052ff;--accent:#00c2ff;
+--text:#ededed;--text-muted:rgba(255,255,255,0.5);
+--font-display:'Inter',sans-serif;--font-body:'Inter',sans-serif;
+--radius:12px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.6;min-height:100vh;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh}
+.screen.active{display:block}
+
+/* ── SCREEN 1: INPUT ── */
+#inputScreen{display:flex;align-items:center;justify-content:center;padding:2rem}
+.input-container{width:100%;max-width:560px}
+.input-logo{height:40px;margin-bottom:2rem;opacity:.7}
+.input-title{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:700;margin-bottom:.5rem;letter-spacing:-.02em}
+.input-sub{color:var(--text-muted);margin-bottom:2.5rem;font-size:.95rem}
+.field{margin-bottom:1.25rem}
+.field label{display:block;font-size:.8rem;color:var(--text-muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em}
+.field input,.field textarea,.field select{width:100%;background:var(--surface);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:.85rem 1rem;color:var(--text);font-family:inherit;font-size:.95rem;outline:none;transition:border .2s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--primary)}
+.field textarea{resize:vertical;min-height:100px}
+.field select option{background:var(--surface);color:var(--text)}
+.row{display:flex;gap:1rem}
+.row .field{flex:1}
+.btn-generate{width:100%;padding:1rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:1.05rem;font-weight:600;cursor:pointer;margin-top:.5rem;transition:background .2s,transform .1s}
+.btn-generate:hover{background:#003acc}
+.btn-generate:active{transform:scale(.98)}
+.btn-generate:disabled{opacity:.5;cursor:not-allowed}
+.error-msg{background:rgba(255,60,60,.15);border:1px solid rgba(255,60,60,.3);border-radius:var(--radius);padding:1rem;margin-top:1rem;font-size:.9rem;color:#ff6b6b}
+.error-msg button{background:transparent;border:1px solid rgba(255,60,60,.4);color:#ff6b6b;padding:.4rem 1rem;border-radius:8px;cursor:pointer;margin-top:.5rem;font-size:.85rem}
+
+/* ── SCREEN 2: LOADING ── */
+#loadingScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem}
+.loader-ring{width:64px;height:64px;border:3px solid rgba(255,255,255,.08);border-top-color:var(--primary);border-radius:50%;animation:spin .9s linear infinite;margin-bottom:2rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-status{font-size:1.1rem;color:var(--text-muted);min-height:1.5em;transition:opacity .3s}
+.loader-status.fade{opacity:0}
+
+/* ── SCREEN 3: PROPOSAL ── */
+#proposalScreen{--p-bg:#030508;--p-surface:#0b111a;--p-primary:#0052ff;--p-accent:#00c2ff;--p-text:#ededed;--p-text-muted:rgba(255,255,255,0.5)}
+
+.proposal-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(0,0,0,.6);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+.proposal-nav button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--p-text);padding:.5rem 1.2rem;border-radius:8px;cursor:pointer;font-size:.85rem;transition:background .2s}
+.proposal-nav button:hover{background:rgba(255,255,255,.15)}
+.nav-brand{font-weight:600;font-size:.9rem;opacity:.6}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-content{position:relative;z-index:1;max-width:900px}
+.hero-client{font-size:clamp(.9rem,1.5vw,1.1rem);text-transform:uppercase;letter-spacing:.15em;color:var(--p-accent);margin-bottom:1rem;opacity:0;transform:translateY(20px);animation:fadeUp .8s .3s forwards}
+.hero-title{font-size:clamp(2.5rem,7vw,5.5rem);font-weight:800;line-height:1.05;letter-spacing:-.03em;margin-bottom:1.5rem;opacity:0;transform:translateY(30px);animation:fadeUp .8s .5s forwards}
+.hero-tagline{font-size:clamp(1rem,2vw,1.3rem);color:var(--p-text-muted);max-width:600px;margin:0 auto;opacity:0;transform:translateY(20px);animation:fadeUp .8s .7s forwards}
+
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+/* GRADIENT MESH BG */
+.bg-gradient-mesh{background:var(--p-bg)}
+.bg-gradient-mesh::before,.bg-gradient-mesh::after{content:'';position:absolute;width:60vmax;height:60vmax;border-radius:50%;filter:blur(80px);opacity:.35;animation:meshMove 12s ease-in-out infinite alternate}
+.bg-gradient-mesh::before{background:var(--p-primary);top:-20%;left:-10%;animation-delay:-2s}
+.bg-gradient-mesh::after{background:var(--p-accent);bottom:-20%;right:-10%}
+@keyframes meshMove{0%{transform:translate(0,0) scale(1)}50%{transform:translate(5vw,-5vh) scale(1.1)}100%{transform:translate(-3vw,3vh) scale(.95)}}
+
+/* PARTICLES BG */
+.bg-particles{background:var(--p-bg)}
+.particle{position:absolute;width:4px;height:4px;background:var(--p-primary);border-radius:50%;opacity:.4;animation:floatP linear infinite}
+@keyframes floatP{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.5}90%{opacity:.5}100%{transform:translateY(-10vh) scale(1);opacity:0}}
+
+/* GEOMETRIC BG */
+.bg-geometric{background:var(--p-bg)}
+.geo-shape{position:absolute;border:2px solid var(--p-primary);opacity:.12;animation:geoFloat 15s ease-in-out infinite}
+.geo-shape:nth-child(odd){border-color:var(--p-accent)}
+@keyframes geoFloat{0%,100%{transform:rotate(0deg) translate(0,0)}33%{transform:rotate(120deg) translate(30px,-20px)}66%{transform:rotate(240deg) translate(-20px,30px)}}
+
+/* NOISE BG */
+.bg-noise{background:var(--p-bg)}
+.bg-noise::before{content:'';position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:noiseAnim .15s steps(4) infinite}
+@keyframes noiseAnim{to{transform:translate(2px,-1px)}}
+
+/* SECTIONS */
+.section{padding:clamp(4rem,10vw,8rem) 2rem;max-width:960px;margin:0 auto}
+.section-reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}
+.section-reveal.visible{opacity:1;transform:translateY(0)}
+.section-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;color:var(--p-accent);margin-bottom:.75rem}
+.section-heading{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;letter-spacing:-.02em;margin-bottom:1.5rem;line-height:1.15}
+.section-text{color:var(--p-text-muted);font-size:1.05rem;line-height:1.8;max-width:700px}
+.section-divider{width:60px;height:3px;background:var(--p-primary);border-radius:2px;margin-bottom:2rem}
+
+/* DELIVERABLES CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem;margin-top:2rem}
+.card{background:var(--p-surface);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:1.5rem;transition:transform .3s,border-color .3s}
+.card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.12)}
+.card-icon{font-size:1.8rem;margin-bottom:.75rem}
+.card-title{font-weight:600;margin-bottom:.4rem;font-size:1.05rem}
+.card-desc{color:var(--p-text-muted);font-size:.9rem;line-height:1.6}
+.card-stagger{opacity:0;transform:translateY(30px);transition:opacity .5s ease,transform .5s ease}
+.card-stagger.visible{opacity:1;transform:translateY(0)}
+
+/* PRICING TABLE */
+.pricing-table{width:100%;border-collapse:collapse;margin-top:2rem}
+.pricing-table th{text-align:left;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--p-text-muted);padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.pricing-table td{padding:.85rem 1rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.95rem}
+.pricing-table td:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pricing-table .detail{color:var(--p-text-muted);font-size:.85rem}
+.pricing-total{background:var(--p-primary);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-top:1.5rem;display:flex;align-items:center;justify-content:space-between}
+.pricing-total-label{font-size:1rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.pricing-total-amount{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;letter-spacing:-.01em}
+
+/* TIMELINE */
+.timeline{margin-top:2rem;position:relative;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:rgba(255,255,255,.08)}
+.timeline-item{position:relative;margin-bottom:2rem;padding-left:1.5rem}
+.timeline-item::before{content:'';position:absolute;left:-2rem;top:8px;width:14px;height:14px;border-radius:50%;background:var(--p-surface);border:3px solid var(--p-primary)}
+.timeline-phase{font-weight:600;font-size:1.05rem;margin-bottom:.2rem}
+.timeline-duration{font-size:.85rem;color:var(--p-accent);margin-bottom:.3rem}
+.timeline-tasks{color:var(--p-text-muted);font-size:.9rem}
+
+/* DIFFERENTIATORS */
+.diff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem;margin-top:2rem}
+.diff-item{text-align:center;padding:2rem 1.5rem}
+.diff-icon{font-size:2.2rem;margin-bottom:1rem}
+.diff-title{font-weight:600;margin-bottom:.5rem;font-size:1.05rem}
+.diff-desc{color:var(--p-text-muted);font-size:.9rem;line-height:1.6}
+
+/* CTA */
+.cta-section{text-align:center;padding:clamp(5rem,12vw,10rem) 2rem}
+.cta-heading{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1rem}
+.cta-text{color:var(--p-text-muted);font-size:1.1rem;margin-bottom:2.5rem;max-width:500px;margin-left:auto;margin-right:auto}
+.cta-btn{display:inline-block;padding:1rem 3rem;background:var(--p-primary);color:#fff;border:none;border-radius:50px;font-size:1.1rem;font-weight:600;cursor:pointer;transition:transform .2s,box-shadow .2s;text-decoration:none}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,82,255,.3)}
+
+/* FOOTER */
+.proposal-footer{text-align:center;padding:2rem;color:var(--p-text-muted);font-size:.8rem;border-top:1px solid rgba(255,255,255,.06)}
+
+/* DOWNLOAD FLOAT */
+.float-download{position:fixed;bottom:2rem;right:2rem;z-index:99;background:var(--p-surface);border:1px solid rgba(255,255,255,.1);color:var(--p-text);padding:.7rem 1.2rem;border-radius:50px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;gap:.5rem;transition:background .2s;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.float-download:hover{background:rgba(255,255,255,.1)}
+
+/* MOBILE */
+@media(max-width:768px){
+  .row{flex-direction:column;gap:0}
+  .cards-grid,.diff-grid{grid-template-columns:1fr}
+  .pricing-table td,.pricing-table th{padding:.6rem .5rem;font-size:.85rem}
+  .proposal-nav{padding:.75rem 1rem}
+  .hero{padding:5rem 1.5rem 3rem}
+}
+
+/* PRINT */
+@media print{
+  #inputScreen,#loadingScreen,.proposal-nav,.float-download{display:none!important}
+  #proposalScreen{display:block!important}
+  .hero{min-height:auto;padding:3rem 1rem}
+  .hero-bg{display:none}
+  .section{padding:2rem 1rem}
+  body{background:#fff;color:#111}
+  .section-text,.card-desc,.timeline-tasks,.diff-desc,.cta-text{color:#444}
+  .section-heading,.hero-title,.card-title,.timeline-phase,.diff-title,.cta-heading,.pricing-total-label{color:#111}
+  .section-label,.hero-client,.timeline-duration{color:#0052ff}
+  .card,.pricing-total{border:1px solid #ddd;background:#f9f9f9}
+  .pricing-table td,.pricing-table th{border-bottom:1px solid #ddd}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ SCREEN 1: INPUT ══════════════ -->
+<div id="inputScreen" class="screen active">
+  <div class="input-container">
+    <div style="margin-bottom:2.5rem">
+      <div class="input-title">Proposal Generator</div>
+      <div class="input-sub">Genera propuestas comerciales con IA</div>
+    </div>
+
+    <div class="field">
+      <label>API Key (Anthropic)</label>
+      <input type="password" id="apiKey" placeholder="sk-ant-...">
+    </div>
+
+    <div class="field">
+      <label>Descripcion del proyecto</label>
+      <textarea id="prompt" placeholder="Ej: Campana de rebranding para una bodega de vinos premium en Mendoza. Necesitan nueva identidad visual, website y estrategia de redes sociales."></textarea>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>Agencia</label>
+        <input type="text" id="agency" placeholder="WTF Agency" value="WTF Agency">
+      </div>
+      <div class="field">
+        <label>Cliente</label>
+        <input type="text" id="client" placeholder="Nombre del cliente">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>Moneda</label>
+        <select id="currency">
+          <option value="ARS">ARS - Peso Argentino</option>
+          <option value="USD">USD - Dolar</option>
+          <option value="EUR">EUR - Euro</option>
+          <option value="MXN">MXN - Peso Mexicano</option>
+          <option value="CLP">CLP - Peso Chileno</option>
+          <option value="COP">COP - Peso Colombiano</option>
+          <option value="BRL">BRL - Real</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Idioma</label>
+        <select id="lang">
+          <option value="es">Espanol</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-generate" id="btnGenerate" onclick="generate()">Generar Propuesta</button>
+    <div id="errorBox" class="error-msg" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══════════════ SCREEN 2: LOADING ══════════════ -->
+<div id="loadingScreen" class="screen">
+  <div class="loader-ring"></div>
+  <div class="loader-status" id="loaderStatus">Analizando el brief...</div>
+</div>
+
+<!-- ══════════════ SCREEN 3: PROPOSAL ══════════════ -->
+<div id="proposalScreen" class="screen">
+  <nav class="proposal-nav">
+    <span class="nav-brand" id="navBrand">WTF Agency</span>
+    <div style="display:flex;gap:.5rem">
+      <button onclick="goBack()">Nueva propuesta</button>
+      <button onclick="window.print()">Descargar PDF</button>
+    </div>
+  </nav>
+
+  <div id="proposalContent"></div>
+
+  <button class="float-download" onclick="window.print()">&#11015; Descargar</button>
+</div>
+
+<script>
+// ── State ──
+const STATUS_MSGS_ES = [
+  'Analizando el brief...',
+  'Investigando el mercado...',
+  'Definiendo la estetica...',
+  'Estructurando entregables...',
+  'Calculando inversion...',
+  'Armando la propuesta...'
+];
+const STATUS_MSGS_EN = [
+  'Analyzing the brief...',
+  'Researching the market...',
+  'Defining the aesthetic...',
+  'Structuring deliverables...',
+  'Calculating investment...',
+  'Building the proposal...'
+];
+let statusInterval;
+
+// ── Init ──
+(function init() {
+  const saved = sessionStorage.getItem('anthropic_key');
+  if (saved) document.getElementById('apiKey').value = saved;
+})();
+
+// ── Screens ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  showScreen('inputScreen');
+  clearInterval(statusInterval);
+}
+
+// ── Loading animation ──
+function startLoader() {
+  const lang = document.getElementById('lang').value;
+  const msgs = lang === 'en' ? STATUS_MSGS_EN : STATUS_MSGS_ES;
+  let i = 0;
+  const el = document.getElementById('loaderStatus');
+  el.textContent = msgs[0];
+  statusInterval = setInterval(() => {
+    el.classList.add('fade');
+    setTimeout(() => {
+      i = (i + 1) % msgs.length;
+      el.textContent = msgs[i];
+      el.classList.remove('fade');
+    }, 300);
+  }, 2200);
+}
+
+// ── Generate ──
+async function generate() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const prompt = document.getElementById('prompt').value.trim();
+  const agency = document.getElementById('agency').value.trim() || 'WTF Agency';
+  const client = document.getElementById('client').value.trim() || 'Cliente';
+  const currency = document.getElementById('currency').value;
+  const lang = document.getElementById('lang').value;
+
+  if (!apiKey) return showError('Ingresa tu API Key de Anthropic');
+  if (!prompt) return showError('Describe el proyecto');
+
+  sessionStorage.setItem('anthropic_key', apiKey);
+  hideError();
+
+  showScreen('loadingScreen');
+  startLoader();
+
+  const systemPrompt = lang === 'en'
+    ? `You are a senior strategic planner at a full-service creative agency. Generate a commercial proposal as structured JSON. The agency is "${agency}". The client is "${client}". Currency: ${currency}. Respond ONLY with valid JSON, no markdown, no backticks, no explanation.`
+    : `Sos un planificador estrategico senior en una agencia creativa full-service en Latinoamerica. Genera una propuesta comercial como JSON estructurado. La agencia es "${agency}". El cliente es "${client}". Moneda: ${currency}. Responde SOLO con JSON valido, sin markdown, sin backticks, sin explicacion.`;
+
+  const userPrompt = lang === 'en'
+    ? `Generate a complete commercial proposal for this project: "${prompt}"
+
+Return this exact JSON structure:
+{
+  "theme": {
+    "palette": { "background": "#hex dark bg", "surface": "#hex slightly lighter", "primary": "#hex main brand color", "accent": "#hex secondary color", "text": "#hex light text", "textMuted": "#hex muted text" },
+    "fonts": { "display": "A Google Font name for headings (expressive, unique)", "body": "A Google Font name for body (clean, readable)" },
+    "aesthetic": "one word: brutalist | luxe | organic | futuristic | editorial | minimal | bold",
+    "backgroundEffect": "gradient-mesh | particles | geometric | noise"
+  },
+  "proposal": {
+    "clientName": "${client}",
+    "projectTitle": "creative project title",
+    "tagline": "an inspiring tagline",
+    "challenge": "2-3 paragraphs describing the challenge/opportunity (use <br><br> between paragraphs)",
+    "approach": "2-3 paragraphs with the strategic approach (use <br><br> between paragraphs)",
+    "deliverables": [ { "icon": "emoji", "title": "...", "description": "..." } ],
+    "pricing": [ { "item": "line item name", "detail": "brief description", "amount": number } ],
+    "currency": "${currency}",
+    "timeline": [ { "phase": "Phase Name", "duration": "X weeks", "tasks": "key tasks" } ],
+    "differentiators": [ { "icon": "emoji", "title": "...", "description": "..." } ],
+    "ctaText": "call to action text"
+  }
+}
+
+Important: pricing amounts must be realistic numbers for the ${currency} currency. Include 4-8 deliverables, 4-8 pricing line items, 3-5 timeline phases, and exactly 3 differentiators. All text in English.`
+    : `Genera una propuesta comercial completa para este proyecto: "${prompt}"
+
+Devolveme esta estructura JSON exacta:
+{
+  "theme": {
+    "palette": { "background": "#hex fondo oscuro", "surface": "#hex algo mas claro", "primary": "#hex color principal de marca", "accent": "#hex color secundario", "text": "#hex texto claro", "textMuted": "#hex texto apagado" },
+    "fonts": { "display": "Un nombre de Google Font para titulos (expresiva, unica)", "body": "Un nombre de Google Font para cuerpo (limpia, legible)" },
+    "aesthetic": "una palabra: brutalist | luxe | organic | futuristic | editorial | minimal | bold",
+    "backgroundEffect": "gradient-mesh | particles | geometric | noise"
+  },
+  "proposal": {
+    "clientName": "${client}",
+    "projectTitle": "titulo creativo del proyecto",
+    "tagline": "un tagline inspirador",
+    "challenge": "2-3 parrafos describiendo el desafio/oportunidad (usa <br><br> entre parrafos)",
+    "approach": "2-3 parrafos con el enfoque estrategico (usa <br><br> entre parrafos)",
+    "deliverables": [ { "icon": "emoji", "title": "...", "description": "..." } ],
+    "pricing": [ { "item": "nombre del item", "detail": "breve descripcion", "amount": numero } ],
+    "currency": "${currency}",
+    "timeline": [ { "phase": "Nombre de Fase", "duration": "X semanas", "tasks": "tareas clave" } ],
+    "differentiators": [ { "icon": "emoji", "title": "...", "description": "..." } ],
+    "ctaText": "texto del call to action"
+  }
+}
+
+Importante: los montos deben ser numeros realistas para la moneda ${currency}. Incluir 4-8 entregables, 4-8 items de precio, 3-5 fases de timeline, y exactamente 3 diferenciadores. Todo el texto en espanol.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4096,
+        messages: [
+          { role: 'user', content: userPrompt }
+        ],
+        system: systemPrompt
+      })
+    });
+
+    clearInterval(statusInterval);
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || `API error: ${res.status}`);
+    }
+
+    const data = await res.json();
+    const text = data.content[0].text;
+
+    // Parse JSON - try to extract from possible markdown wrapping
+    let json;
+    try {
+      json = JSON.parse(text);
+    } catch {
+      const match = text.match(/\{[\s\S]*\}/);
+      if (match) json = JSON.parse(match[0]);
+      else throw new Error('No se pudo parsear la respuesta');
+    }
+
+    renderProposal(json);
+
+  } catch (err) {
+    clearInterval(statusInterval);
+    showScreen('inputScreen');
+    showError(err.message + '<br><button onclick="generate()">Reintentar</button>');
+  }
+}
+
+// ── Error handling ──
+function showError(msg) {
+  const el = document.getElementById('errorBox');
+  el.innerHTML = msg;
+  el.style.display = 'block';
+}
+function hideError() {
+  document.getElementById('errorBox').style.display = 'none';
+}
+
+// ── Format currency ──
+function fmtCurrency(amount, currency) {
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+}
+
+// ── Render Proposal ──
+function renderProposal(data) {
+  const { theme, proposal } = data;
+  const p = proposal;
+  const t = theme;
+
+  // Apply theme CSS vars
+  const root = document.getElementById('proposalScreen');
+  root.style.setProperty('--p-bg', t.palette.background);
+  root.style.setProperty('--p-surface', t.palette.surface);
+  root.style.setProperty('--p-primary', t.palette.primary);
+  root.style.setProperty('--p-accent', t.palette.accent);
+  root.style.setProperty('--p-text', t.palette.text);
+  root.style.setProperty('--p-text-muted', t.palette.textMuted);
+  root.style.background = t.palette.background;
+  root.style.color = t.palette.text;
+
+  // Load Google Fonts
+  const fontLink = document.createElement('link');
+  fontLink.rel = 'stylesheet';
+  fontLink.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(t.fonts.display)}:wght@400;600;700;800&family=${encodeURIComponent(t.fonts.body)}:wght@400;500;600&display=swap`;
+  document.head.appendChild(fontLink);
+
+  root.style.fontFamily = `'${t.fonts.body}', sans-serif`;
+  document.getElementById('navBrand').textContent = document.getElementById('agency').value || 'WTF Agency';
+
+  const lang = document.getElementById('lang').value;
+
+  // Build hero bg
+  let heroBgHTML = '';
+  const effect = t.backgroundEffect || 'gradient-mesh';
+  if (effect === 'particles') {
+    let particles = '';
+    for (let i = 0; i < 40; i++) {
+      const left = Math.random() * 100;
+      const delay = Math.random() * 10;
+      const dur = 8 + Math.random() * 12;
+      const size = 2 + Math.random() * 4;
+      particles += `<div class="particle" style="left:${left}%;width:${size}px;height:${size}px;animation-duration:${dur}s;animation-delay:${delay}s"></div>`;
+    }
+    heroBgHTML = `<div class="hero-bg bg-particles">${particles}</div>`;
+  } else if (effect === 'geometric') {
+    let shapes = '';
+    for (let i = 0; i < 8; i++) {
+      const s = 40 + Math.random() * 120;
+      const top = Math.random() * 80;
+      const left = Math.random() * 80;
+      const dur = 12 + Math.random() * 10;
+      const delay = Math.random() * -10;
+      const br = Math.random() > 0.5 ? '50%' : '0';
+      shapes += `<div class="geo-shape" style="width:${s}px;height:${s}px;top:${top}%;left:${left}%;border-radius:${br};animation-duration:${dur}s;animation-delay:${delay}s"></div>`;
+    }
+    heroBgHTML = `<div class="hero-bg bg-geometric">${shapes}</div>`;
+  } else if (effect === 'noise') {
+    heroBgHTML = `<div class="hero-bg bg-noise"></div>`;
+  } else {
+    heroBgHTML = `<div class="hero-bg bg-gradient-mesh"></div>`;
+  }
+
+  // Calculate total
+  const total = p.pricing.reduce((sum, item) => sum + (item.amount || 0), 0);
+  const curr = p.currency || 'ARS';
+
+  // Labels
+  const labels = lang === 'en' ? {
+    challenge: 'The Challenge', approach: 'Our Approach', deliverables: 'Scope & Deliverables',
+    investment: 'Investment', timeline: 'Timeline', whyUs: 'Why Us', letsChat: "Let's Talk",
+    item: 'Item', detail: 'Detail', amount: 'Amount', total: 'Total Investment'
+  } : {
+    challenge: 'El Desafio', approach: 'Nuestra Propuesta', deliverables: 'Alcance & Entregables',
+    investment: 'Inversion', timeline: 'Cronograma', whyUs: 'Por Que Nosotros', letsChat: 'Hablemos',
+    item: 'Item', detail: 'Detalle', amount: 'Monto', total: 'Inversion Total'
+  };
+
+  // Build HTML
+  const html = `
+    <!-- HERO -->
+    <section class="hero">
+      ${heroBgHTML}
+      <div class="hero-content">
+        <div class="hero-client">${p.clientName}</div>
+        <h1 class="hero-title" style="font-family:'${t.fonts.display}',sans-serif">${p.projectTitle}</h1>
+        <p class="hero-tagline">${p.tagline}</p>
+      </div>
+    </section>
+
+    <!-- CHALLENGE -->
+    <section class="section section-reveal">
+      <div class="section-label">${labels.challenge}</div>
+      <div class="section-divider"></div>
+      <h2 class="section-heading" style="font-family:'${t.fonts.display}',sans-serif">${lang === 'en' ? 'Understanding the Opportunity' : 'Entendiendo la Oportunidad'}</h2>
+      <div class="section-text">${p.challenge}</div>
+    </section>
+
+    <!-- APPROACH -->
+    <section class="section section-reveal">
+      <div class="section-label">${labels.approach}</div>
+      <div class="section-divider"></div>
+      <h2 class="section-heading" style="font-family:'${t.fonts.display}',sans-serif">${lang === 'en' ? 'Strategic Approach' : 'Enfoque Estrategico'}</h2>
+      <div class="section-text">${p.approach}</div>
+    </section>
+
+    <!-- DELIVERABLES -->
+    <section class="section section-reveal">
+      <div class="section-label">${labels.deliverables}</div>
+      <div class="section-divider"></div>
+      <h2 class="section-heading" style="font-family:'${t.fonts.display}',sans-serif">${lang === 'en' ? 'What We Will Deliver' : 'Que Vamos a Entregar'}</h2>
+      <div class="cards-grid">
+        ${p.deliverables.map((d, i) => `
+          <div class="card card-stagger" style="transition-delay:${i * 0.1}s">
+            <div class="card-icon">${d.icon}</div>
+            <div class="card-title">${d.title}</div>
+            <div class="card-desc">${d.description}</div>
+          </div>
+        `).join('')}
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section section-reveal">
+      <div class="section-label">${labels.investment}</div>
+      <div class="section-divider"></div>
+      <h2 class="section-heading" style="font-family:'${t.fonts.display}',sans-serif">${labels.investment}</h2>
+      <table class="pricing-table">
+        <thead>
+          <tr><th>${labels.item}</th><th>${labels.detail}</th><th style="text-align:right">${labels.amount}</th></tr>
+        </thead>
+        <tbody>
+          ${p.pricing.map(item => `
+            <tr>
+              <td>${item.item}</td>
+              <td class="detail">${item.detail}</td>
+              <td>${fmtCurrency(item.amount, curr)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      <div class="pricing-total" style="background:${t.palette.primary}">
+        <span class="pricing-total-label">${labels.total}</span>
+        <span class="pricing-total-amount">${fmtCurrency(total, curr)}</span>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="section section-reveal">
+      <div class="section-label">${labels.timeline}</div>
+      <div class="section-divider"></div>
+      <h2 class="section-heading" style="font-family:'${t.fonts.display}',sans-serif">${labels.timeline}</h2>
+      <div class="timeline">
+        ${p.timeline.map(t => `
+          <div class="timeline-item">
+            <div class="timeline-phase">${t.phase}</div>
+            <div class="timeline-duration">${t.duration}</div>
+            <div class="timeline-tasks">${t.tasks}</div>
+          </div>
+        `).join('')}
+      </div>
+    </section>
+
+    <!-- WHY US -->
+    <section class="section section-reveal">
+      <div class="section-label">${labels.whyUs}</div>
+      <div class="section-divider"></div>
+      <h2 class="section-heading" style="font-family:'${t.fonts.display}',sans-serif">${lang === 'en' ? 'Why Work With Us' : 'Por Que Trabajar Con Nosotros'}</h2>
+      <div class="diff-grid">
+        ${(p.differentiators || []).map(d => `
+          <div class="diff-item">
+            <div class="diff-icon">${d.icon}</div>
+            <div class="diff-title">${d.title}</div>
+            <div class="diff-desc">${d.description}</div>
+          </div>
+        `).join('')}
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section section-reveal">
+      <h2 class="cta-heading" style="font-family:'${t.fonts.display}',sans-serif">${labels.letsChat}</h2>
+      <p class="cta-text">${p.ctaText}</p>
+      <a href="mailto:hola@wtf-agency.works" class="cta-btn" style="background:${t.palette.primary}">${labels.letsChat} &rarr;</a>
+    </section>
+
+    <footer class="proposal-footer">
+      ${document.getElementById('agency').value || 'WTF Agency'} &copy; ${new Date().getFullYear()} &middot; ${lang === 'en' ? 'Proposal generated with AI' : 'Propuesta generada con IA'}
+    </footer>
+  `;
+
+  document.getElementById('proposalContent').innerHTML = html;
+  showScreen('proposalScreen');
+
+  // Setup IntersectionObserver for animations
+  setTimeout(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Also reveal card children
+          entry.target.querySelectorAll('.card-stagger').forEach(c => c.classList.add('visible'));
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.section-reveal').forEach(el => observer.observe(el));
+  }, 100);
+}
+</script>
+</body>
+</html>

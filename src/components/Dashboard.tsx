@@ -38,12 +38,22 @@ export default function Dashboard() {
               </p>
             </div>
           </div>
-          <button
-            onClick={() => setShowImport(true)}
-            className="px-5 py-2.5 bg-accent hover:bg-accent-hover text-white rounded-lg font-medium transition-colors"
-          >
-            + Importar Proyecto
-          </button>
+          <div className="flex items-center gap-3">
+            <a
+              href="/generator/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 border border-accent text-accent hover:bg-accent hover:text-white rounded-lg font-medium transition-colors"
+            >
+              Budget Generator
+            </a>
+            <button
+              onClick={() => setShowImport(true)}
+              className="px-5 py-2.5 bg-accent hover:bg-accent-hover text-white rounded-lg font-medium transition-colors"
+            >
+              + Importar Proyecto
+            </button>
+          </div>
         </div>
       </header>
 
