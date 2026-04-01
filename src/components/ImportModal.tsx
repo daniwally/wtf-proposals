@@ -163,7 +163,7 @@ export default function ImportModal({ open, onClose, onImported }: ImportModalPr
                     autoFocus
                   />
                 </div>
-                <div className="max-h-48 overflow-y-auto">
+                <div className="max-h-48 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
                   {repos
                     .filter((r) => r.name.toLowerCase().includes(repoFilter.toLowerCase()))
                     .map((repo) => (
