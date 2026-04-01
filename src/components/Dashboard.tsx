@@ -74,7 +74,7 @@ export default function Dashboard() {
             </button>
           </div>
         ) : (
-          <div className="grid gap-4">
+          <div className="flex flex-wrap gap-4">
             {projects.map((project) => (
               <ProjectCard
                 key={project.id}
