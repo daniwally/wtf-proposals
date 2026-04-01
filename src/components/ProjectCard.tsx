@@ -59,6 +59,20 @@ export default function ProjectCard({ project, onUpdate }: ProjectCardProps) {
     onUpdate();
   };
 
+  const handleReimport = async () => {
+    setLoading(true);
+    await fetch("/api/projects/import", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        repoFullName: project.repoUrl,
+        subdomain: project.subdomain,
+      }),
+    });
+    setLoading(false);
+    alert(`Re-importando ${project.name}. En unos minutos se actualiza.`);
+  };
+
   const handleDelete = async () => {
     if (!confirm(`Eliminar "${project.name}"?`)) return;
     setLoading(true);
@@ -194,6 +208,13 @@ export default function ProjectCard({ project, onUpdate }: ProjectCardProps) {
           className="px-3 py-1.5 border border-white/20 rounded-lg text-white/60 hover:text-white transition-colors"
         >
           {project.status === "active" ? "Desactivar" : "Activar"}
+        </button>
+        <button
+          onClick={handleReimport}
+          disabled={loading}
+          className="px-3 py-1.5 border border-accent/50 rounded-lg text-accent hover:bg-accent/10 transition-colors"
+        >
+          Actualizar
         </button>
         <button
           onClick={handleDelete}
