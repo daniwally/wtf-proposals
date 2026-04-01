@@ -1,14 +1,5 @@
 [
   {
-    "id": "979543ff-20f1-456b-8fab-000da86c0fb0",
-    "name": "Telit Test",
-    "subdomain": "telit",
-    "repoUrl": "daniwally/telit",
-    "status": "active",
-    "createdAt": "2026-04-01T12:25:09.380Z",
-    "updatedAt": "2026-04-01T12:25:09.380Z"
-  },
-  {
     "name": "lost",
     "description": "proyecto lost muebles",
     "subdomain": "atelier",
