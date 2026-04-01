@@ -29,11 +29,14 @@ export default function Dashboard() {
       {/* Header */}
       <header className="border-b border-border">
         <div className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">WTF Proposals</h1>
-            <p className="text-muted text-sm mt-1">
-              {projects.length} proyectos &middot; {activeCount} activos
-            </p>
+          <div className="flex items-center gap-4">
+            <img src="/assets/logo-wtf.png" alt="WTF Agency" className="h-8" />
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">Proposals</h1>
+              <p className="text-muted text-sm mt-1">
+                {projects.length} proyectos &middot; {activeCount} activos
+              </p>
+            </div>
           </div>
           <button
             onClick={() => setShowImport(true)}
