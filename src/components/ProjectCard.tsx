@@ -185,7 +185,7 @@ export default function ProjectCard({ project, onUpdate }: ProjectCardProps) {
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-1.5 text-xs">
+      <div className="flex items-center gap-1.5 text-xs">
         {!editing && (
           <button
             onClick={() => setEditing(true)}
