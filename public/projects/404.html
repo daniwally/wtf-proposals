@@ -1,1 +1,63 @@
-<\!DOCTYPE html><html><head><meta charset="utf-8"><title>Proyecto no encontrado</title><style>body{background:#030508;color:#ededed;font-family:system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}div{text-align:center}h1{font-size:2rem;margin-bottom:0.5rem}p{color:#6b7280}</style></head><body><div><h1>Proyecto no disponible</h1><p>Este presupuesto aún no ha sido importado o no existe.</p></div></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WTF Agency</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #030508;
+      color: #ededed;
+      font-family: 'Inter', system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-image: url('/assets/bg_1.png');
+      background-size: cover;
+      background-position: center;
+    }
+    .container {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 48px 40px;
+      max-width: 440px;
+      width: 90%;
+    }
+    .logo { height: 40px; margin-bottom: 32px; opacity: 0.8; }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #0052ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 24px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    p {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="/assets/logo-wtf.png" alt="WTF Agency" class="logo">
+    <div class="spinner"></div>
+    <h1>Preparando tu proyecto</h1>
+    <p>Estamos construyendo y desplegando este proyecto. En unos minutos estara disponible.</p>
+  </div>
+</body>
+</html>
