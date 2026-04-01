@@ -7,5 +7,14 @@
     "id": "e4230ad2-e28a-40f0-9fdb-8a34791c0eff",
     "createdAt": "2026-04-01T11:56:40.717Z",
     "updatedAt": "2026-04-01T11:56:40.717Z"
+  },
+  {
+    "name": "Telit-test",
+    "subdomain": "test",
+    "repoUrl": "daniwally/telit",
+    "status": "active",
+    "id": "1d009d30-d9ac-465e-875d-7677da7ad332",
+    "createdAt": "2026-04-01T11:56:54.311Z",
+    "updatedAt": "2026-04-01T11:56:54.311Z"
   }
 ]
