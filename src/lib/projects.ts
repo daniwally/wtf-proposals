@@ -128,11 +128,51 @@ export async function updateProject(
   return projects[index];
 }
 
+async function deleteProjectFiles(subdomain: string) {
+  const dirPath = `public/projects/${subdomain}`;
+  try {
+    // List all files in the project directory
+    const res = await fetch(
+      `https://api.github.com/repos/${REPO}/contents/${dirPath}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+          Accept: "application/vnd.github.v3+json",
+        },
+      }
+    );
+    if (!res.ok) return;
+    const files = await res.json();
+    if (!Array.isArray(files)) return;
+
+    // Delete each file
+    for (const file of files) {
+      await fetch(
+        `https://api.github.com/repos/${REPO}/contents/${file.path}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+            Accept: "application/vnd.github.v3+json",
+          },
+          body: JSON.stringify({
+            message: `Delete ${file.path}`,
+            sha: file.sha,
+          }),
+        }
+      );
+    }
+  } catch (e) {
+    console.error("Error deleting project files:", e);
+  }
+}
+
 export async function deleteProject(id: string): Promise<boolean> {
   const { content: projects, sha } = await getFileFromGitHub();
   const project = projects.find((p) => p.id === id);
   if (!project) return false;
   const filtered = projects.filter((p) => p.id !== id);
   await saveFileToGitHub(filtered, sha, `Delete project: ${project.name}`);
+  await deleteProjectFiles(project.subdomain);
   return true;
 }
