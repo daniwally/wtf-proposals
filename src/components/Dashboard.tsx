@@ -30,7 +30,7 @@ export default function Dashboard() {
       <header className="border-b border-border">
         <div className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <img src="/assets/logo-wtf.png" alt="WTF Agency" className="h-8" />
+            <img src="/assets/logo-wtf.png" alt="WTF Agency" className="h-10" />
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Proposals</h1>
               <p className="text-muted text-sm mt-1">
