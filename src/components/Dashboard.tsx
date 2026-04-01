@@ -25,7 +25,7 @@ export default function Dashboard() {
   const activeCount = projects.filter((p) => p.status === "active").length;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background bg-cover bg-center bg-fixed bg-no-repeat" style={{ backgroundImage: "url('/assets/bg_1.png')" }}>
       {/* Header */}
       <header className="border-b border-border">
         <div className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
