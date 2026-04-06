@@ -68,5 +68,15 @@
     "id": "c59acd6a-4e89-49eb-8291-605b79483157",
     "createdAt": "2026-04-06T17:40:13.458Z",
     "updatedAt": "2026-04-06T17:41:19.871Z"
+  },
+  {
+    "name": "onecommando",
+    "description": "",
+    "subdomain": "onecommandotest",
+    "repoUrl": "daniwally/onecommando",
+    "status": "active",
+    "id": "4b14a0a4-0e17-4335-9374-1ab73c361760",
+    "createdAt": "2026-04-06T18:31:29.994Z",
+    "updatedAt": "2026-04-06T18:31:29.994Z"
   }
 ]
