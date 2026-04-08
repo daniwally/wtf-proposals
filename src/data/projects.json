@@ -88,5 +88,15 @@
     "id": "21041244-1760-4aff-8bbd-4a0c4b71e105",
     "createdAt": "2026-04-07T18:37:27.879Z",
     "updatedAt": "2026-04-07T18:38:49.233Z"
+  },
+  {
+    "name": "Rumikuna",
+    "description": "",
+    "subdomain": "bodegabrumikuna",
+    "repoUrl": "daniwally/Rumikuna",
+    "status": "active",
+    "id": "eeee91e1-ac16-4507-a946-23a92b25e1b1",
+    "createdAt": "2026-04-08T16:53:30.588Z",
+    "updatedAt": "2026-04-08T16:53:30.588Z"
   }
 ]
