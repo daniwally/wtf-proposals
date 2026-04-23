@@ -88,5 +88,15 @@
     "id": "42e7221b-5c0b-4984-addd-d3d9e998ae59",
     "createdAt": "2026-04-10T11:51:52.514Z",
     "updatedAt": "2026-04-10T11:52:59.564Z"
+  },
+  {
+    "name": "wines",
+    "description": "",
+    "subdomain": "wines",
+    "repoUrl": "daniwally/wines",
+    "status": "active",
+    "id": "6ab04493-c241-42b6-8e2c-4e450c384c24",
+    "createdAt": "2026-04-23T15:37:58.762Z",
+    "updatedAt": "2026-04-23T15:37:58.762Z"
   }
 ]
