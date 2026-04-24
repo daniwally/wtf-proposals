@@ -98,5 +98,15 @@
     "id": "dd31ab2f-0849-4418-b879-59738f361b16",
     "createdAt": "2026-04-24T17:10:31.283Z",
     "updatedAt": "2026-04-24T17:11:41.715Z"
+  },
+  {
+    "name": "onemando-landing",
+    "description": "",
+    "subdomain": "onemando-landing",
+    "repoUrl": "daniwally/onemando-landing",
+    "status": "active",
+    "id": "6c792886-415d-4ed1-a373-d7e444cde928",
+    "createdAt": "2026-04-24T21:21:08.165Z",
+    "updatedAt": "2026-04-24T21:21:08.165Z"
   }
 ]
