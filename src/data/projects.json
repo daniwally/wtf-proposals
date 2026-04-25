@@ -4,10 +4,10 @@
     "description": "telit x",
     "subdomain": "telitw",
     "repoUrl": "daniwally/telit",
-    "status": "active",
+    "status": "inactive",
     "id": "9fb4db48-01d8-44b5-a294-b14d84b809a0",
     "createdAt": "2026-04-01T14:06:06.220Z",
-    "updatedAt": "2026-04-15T00:09:33.883Z"
+    "updatedAt": "2026-04-25T00:08:35.540Z"
   },
   {
     "name": "meals",
