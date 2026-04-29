@@ -108,5 +108,15 @@
     "id": "6c792886-415d-4ed1-a373-d7e444cde928",
     "createdAt": "2026-04-24T21:21:08.165Z",
     "updatedAt": "2026-04-24T21:22:41.736Z"
+  },
+  {
+    "name": "morelli-manual",
+    "description": "",
+    "subdomain": "morelli-manual",
+    "repoUrl": "daniwally/morelli-manual",
+    "status": "active",
+    "id": "8c6720fd-4d98-4b11-8b87-144ff89cbbbd",
+    "createdAt": "2026-04-29T14:35:42.904Z",
+    "updatedAt": "2026-04-29T14:35:42.904Z"
   }
 ]
